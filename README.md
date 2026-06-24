@@ -6,14 +6,27 @@
 ---
 
 ## 📌 목차
-1. [문제 정의 (Problem Statement)](#-문제-정의-problem-statement)
-2. [핵심 기능 (Core Features)](#-핵심-기능-core-features)
-3. [부품 관리 (Parts Management)](#-부품-관리-parts-management)
-4. [차세대 비전 (Next Version — AI Voice UX)](#-차세대-비전-next-version--ai-voice-ux)
-5. [비즈니스 모델 (Business Model)](#-비즈니스-모델-business-model)
-6. [개발 로드맵 (Roadmap)](#-개발-로드맵-roadmap)
-7. [기술 스택 (Tech Stack)](#-기술-스택-tech-stack)
-8. [개발자 소개 (Developer Info)](#-개발자-소개-developer-info)
+1. [기획 의도 및 철학 (Project Philosophy)](#-기획-의도-및-철학-project-philosophy)
+2. [문제 정의 (Problem Statement)](#-문제-정의-problem-statement)
+3. [핵심 기능 (Core Features)](#-핵심-기능-core-features)
+4. [부품 관리 (Parts Management)](#-부품-관리-parts-management)
+5. [차세대 비전 (Next Version — AI Voice UX)](#-차세대-비전-next-version--ai-voice-ux)
+6. [비즈니스 모델 (Business Model)](#-비즈니스-모델-business-model)
+7. [개발 로드맵 (Roadmap)](#-개발-로드맵-roadmap)
+8. [기술 스택 (Tech Stack)](#-기술-스택-tech-stack)
+9. [개발자 소개 (Developer Info)](#-개발자-소개-developer-info)
+
+---
+
+## 💡 기획 의도 및 철학 (Project Philosophy)
+
+> **"자동차는 단순한 이동 수단이 아닙니다."**  
+> 가족, 연인, 친구들과 함께 소중한 추억을 쌓아가는 공간이자, 여행과 드라이브의 설렘을 전하는 매개체입니다.
+> 
+> 고속도로에서의 갑작스러운 차량 고장은 구동벨트, 점화플러그 같은 핵심 부품들의 방치에서 시작됩니다. 평소 잘 모른다는 이유로 무심히 그냥 지나쳤던 작은 신호들이, 때로는 생명을 위협하는 위험한 2차 사고로 이어지기도 합니다.
+> 
+> **사람의 생명은 그 무엇과도 바꿀 수 없기에.**  
+> 조기 점검과 예방 교체를 통해 모두가 안전하고 당당하게 도로 위를 달릴 수 있도록 도우려 합니다. 저는 그래서 '카닥터'를 만들었습니다.
 
 ---
 
