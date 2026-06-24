@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>카닥터 — AI 정비 주치의</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0A1628;--bg2:#0D1E35;--card:#1C2E4A;--card2:#243555;
+  --point:#FF8C00;--danger:#E53935;--safe:#43A047;--ai:#4FC3F7;
+  --text1:#fff;--text2:#A0B0C8;--border:rgba(255,255,255,0.08);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text1);font-family:'Noto Sans KR',sans-serif;overflow-x:hidden;}
+
+/* ── 네비 ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,22,40,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{font-size:20px;font-weight:700;color:var(--point);}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:14px;transition:color .2s;}
+.nav-links a:hover{color:var(--point);}
+
+/* ── 섹션 공통 ── */
+section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--point);text-transform:uppercase;margin-bottom:16px;}
+.sec-title{font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.15;text-align:center;margin-bottom:20px;}
+.sec-sub{font-size:16px;color:var(--text2);text-align:center;line-height:1.8;max-width:600px;}
+
+/* ── 히어로 ── */
+#hero{position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(255,140,0,.12) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(79,195,247,.08) 0%,transparent 50%);}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:800px;}
+.hero-badge{display:inline-block;background:rgba(255,140,0,.15);border:1px solid rgba(255,140,0,.3);color:var(--point);padding:6px 18px;border-radius:99px;font-size:12px;font-weight:700;margin-bottom:28px;letter-spacing:.05em;}
+.hero-title{font-size:clamp(40px,7vw,80px);font-weight:900;line-height:1.1;margin-bottom:24px;}
+.hero-title span{color:var(--point);}
+.hero-sub{font-size:18px;color:var(--text2);line-height:1.8;margin-bottom:48px;max-width:600px;margin-left:auto;margin-right:auto;}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-hero{padding:14px 32px;border-radius:99px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:'Noto Sans KR',sans-serif;transition:transform .15s,opacity .15s;text-decoration:none;display:inline-block;}
+.btn-hero:active{transform:scale(.97);}
+.btn-p{background:var(--point);color:#fff;}
+.btn-o{background:transparent;color:var(--text1);border:1.5px solid rgba(255,255,255,.25);}
+.scroll-hint{margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text2);font-size:12px;animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+/* ── 문제 정의 ── */
+#problem{background:var(--bg2);}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:900px;width:100%;margin-top:48px;}
+.problem-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;}
+.problem-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(229,57,53,.06) 0%,transparent 60%);}
+.p-num{font-size:48px;font-weight:900;color:rgba(229,57,53,.15);font-family:'Roboto Mono',monospace;line-height:1;margin-bottom:12px;}
+.p-title{font-size:17px;font-weight:700;margin-bottom:8px;}
+.p-desc{font-size:13px;color:var(--text2);line-height:1.7;}
+
+/* ── 핵심기능 ── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:1000px;width:100%;margin-top:48px;}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;transition:border-color .2s,transform .2s;}
+.feat-card:hover{border-color:var(--point);transform:translateY(-4px);}
+.feat-icon{font-size:36px;margin-bottom:16px;}
+.feat-title{font-size:18px;font-weight:700;margin-bottom:10px;}
+.feat-desc{font-size:13px;color:var(--text2);line-height:1.7;}
+.feat-tag{display:inline-block;margin-top:14px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(255,140,0,.12);color:var(--point);}
+
+/* ── 부품 테이블 ── */
+#parts{background:var(--bg2);}
+.parts-table{width:100%;max-width:800px;border-collapse:collapse;margin-top:48px;}
+.parts-table th{background:var(--card2);padding:14px 20px;text-align:left;font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.05em;}
+.parts-table th:first-child{border-radius:12px 0 0 12px;}
+.parts-table th:last-child{border-radius:0 12px 12px 0;}
+.parts-table td{padding:14px 20px;border-bottom:1px solid var(--border);font-size:14px;}
+.parts-table tr:last-child td{border-bottom:none;}
+.parts-table tr:hover td{background:rgba(255,255,255,.02);}
+.km{font-family:'Roboto Mono',monospace;color:var(--point);font-weight:600;}
+.risk-danger{color:var(--danger);font-size:12px;font-weight:700;}
+.risk-warning{color:var(--point);font-size:12px;font-weight:700;}
+.gauge-mini{width:80px;height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:4px;}
+.gauge-mini-fill{height:100%;border-radius:99px;}
+
+/* ── 음성 UX ── */
+#voice{position:relative;overflow:hidden;}
+.voice-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(79,195,247,.1) 0%,transparent 60%);}
+.voice-flow{max-width:800px;width:100%;margin-top:48px;display:flex;flex-direction:column;gap:0;}
+.voice-step{display:flex;gap:20px;align-items:flex-start;}
+.voice-line{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;}
+.voice-dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.voice-connector{width:2px;flex:1;min-height:32px;background:linear-gradient(to bottom,rgba(79,195,247,.3),rgba(79,195,247,.1));}
+.voice-bubble{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:16px;flex:1;}
+.voice-who{font-size:11px;font-weight:700;letter-spacing:.05em;margin-bottom:8px;}
+.voice-text{font-size:14px;line-height:1.7;color:var(--text1);}
+.voice-action{background:rgba(79,195,247,.08);border:1px solid rgba(79,195,247,.2);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--ai);line-height:1.7;margin-top:8px;}
+
+/* ── 비즈니스 모델 ── */
+#biz{background:var(--bg2);}
+.biz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;max-width:1000px;width:100%;margin-top:48px;}
+.biz-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:center;}
+.biz-icon{font-size:44px;margin-bottom:16px;}
+.biz-title{font-size:16px;font-weight:700;margin-bottom:10px;}
+.biz-desc{font-size:13px;color:var(--text2);line-height:1.7;}
+.biz-arrow{display:flex;align-items:center;justify-content:center;color:var(--point);font-size:24px;padding-top:20px;}
+
+/* ── 로드맵 ── */
+.roadmap{max-width:800px;width:100%;margin-top:48px;display:flex;flex-direction:column;gap:0;}
+.roadmap-step{display:flex;gap:24px;align-items:flex-start;}
+.roadmap-left{display:flex;flex-direction:column;align-items:center;gap:0;}
+.roadmap-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;border:2px solid;}
+.roadmap-line{width:2px;flex:1;min-height:40px;}
+.roadmap-content{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:20px;flex:1;}
+.roadmap-phase{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:6px;}
+.roadmap-title{font-size:17px;font-weight:700;margin-bottom:8px;}
+.roadmap-items{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.roadmap-tag{padding:4px 12px;border-radius:99px;font-size:11px;font-weight:600;background:var(--card2);}
+
+/* ── 기술스택 ── */
+#tech{background:var(--bg2);}
+.tech-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:700px;margin-top:48px;}
+.tech-chip{padding:10px 20px;border-radius:12px;background:var(--card);border:1px solid var(--border);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;}
+
+/* ── 마무리 ── */
+#outro{background:linear-gradient(135deg,#0A1628 0%,#0D2440 100%);position:relative;overflow:hidden;}
+.outro-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,140,0,.1) 0%,transparent 60%);}
+.outro-content{position:relative;z-index:1;text-align:center;}
+.outro-title{font-size:clamp(32px,5vw,60px);font-weight:900;line-height:1.2;margin-bottom:24px;}
+.outro-title span{color:var(--point);}
+.outro-sub{font-size:16px;color:var(--text2);line-height:1.8;max-width:500px;margin:0 auto 48px;}
+.dev-info{margin-top:60px;padding-top:40px;border-top:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:8px;}
+.dev-name{font-size:20px;font-weight:700;}
+.dev-desc{font-size:13px;color:var(--text2);}
+
+/* ── 스크롤 진행바 ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--point);z-index:200;transition:width .1s;}
+
+/* ── 반응형 ── */
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  section{padding:100px 20px 60px;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<nav>
+  <div class="logo">🚗 카닥터</div>
+  <div class="nav-links">
+    <a href="#problem">문제 정의</a>
+    <a href="#features">핵심 기능</a>
+    <a href="#voice">AI 음성</a>
+    <a href="#biz">비즈니스</a>
+    <a href="#roadmap">로드맵</a>
+  </div>
+</nav>
+
+<!-- ── 히어로 ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Portfolio v1.0 — 조진훈</div>
+    <h1 class="hero-title">차알못도 <span>당당하게</span><br/>바가지는 이제 그만</h1>
+    <p class="hero-sub">소리·냄새·느낌만 말하면 AI가 즉시 진단하고,<br/>정비소에서 바가지 맞지 않도록 도와주는 AI 차량 케어 플랫폼</p>
+    <div class="hero-btns">
+      <a href="#features" class="btn-hero btn-p">핵심 기능 보기</a>
+      <a href="#voice" class="btn-hero btn-o">AI 음성 UX 보기</a>
+    </div>
+    <div class="scroll-hint">
+      <span>스크롤</span>
+      <span style="font-size:18px;">↓</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 문제 정의 ── -->
+<section id="problem">
+  <div class="sec-label">Problem Statement</div>
+  <h2 class="sec-title">왜 카닥터가 필요한가</h2>
+  <p class="sec-sub">운전자들이 정비소에서 겪는 두 가지 핵심 문제</p>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="p-num">01</div>
+      <div class="p-title">🔇 증상을 설명할 수가 없다</div>
+      <div class="p-desc">차에서 이상한 소리·냄새가 나도 정확한 원인을 몰라 불안합니다. 주행 중 스마트폰 검색은 위험하고, 텍스트만으로는 차량 소음을 설명하기 어렵습니다.</div>
+    </div>
+    <div class="problem-card">
+      <div class="p-num">02</div>
+      <div class="p-title">💸 바가지를 맞는다</div>
+      <div class="p-desc">자동차 지식이 없으면 정비소에서 불필요한 수리를 권유받아도 거절하기 어렵습니다. 공식센터 vs 공임나라 가격 차이가 최대 3~4배에 달합니다.</div>
+    </div>
+    <div class="problem-card">
+      <div class="p-num">03</div>
+      <div class="p-title">⏰ 핵심 부품을 방치한다</div>
+      <div class="p-desc">엔진오일·타이어는 알아도, 타이밍벨트·휠 얼라이먼트는 비용 부담으로 미룹니다. 방치하면 20~30만원 추가 비용 또는 사고로 이어집니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 핵심 기능 ── -->
+<section id="features">
+  <div class="sec-label">Core Features</div>
+  <h2 class="sec-title">6가지 핵심 기능</h2>
+  <p class="sec-sub">차량 관리의 모든 것을 하나의 앱으로</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">AI 증상 진단</div>
+      <div class="feat-desc">소리·냄새·느낌으로 증상을 입력하면 AI가 즉시 원인을 분석합니다. 픽토그램 선택 또는 텍스트 입력 모두 가능합니다.</div>
+      <span class="feat-tag">키워드 매핑 → 추후 AI API 연동</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-title">바가지 방지 카드</div>
+      <div class="feat-desc">AI 진단 결과를 카드 형태로 자동 생성합니다. 정비소에서 사장님께 직접 보여주면 됩니다. 예상 수리비도 함께 표시됩니다.</div>
+      <span class="feat-tag">진단 결과 자동 생성</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">10만km 부품 대시보드</div>
+      <div class="feat-desc">현재 주행거리 기준으로 핵심 부품 교체 시기를 게이지로 시각화합니다. 80% 이상이면 교체 권장 알림이 뜹니다.</div>
+      <span class="feat-tag">주행거리 기준 % 계산</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💰</div>
+      <div class="feat-title">수리비 비교 계산기</div>
+      <div class="feat-desc">공식 서비스센터 vs 공임나라 비용을 항목별로 실시간 비교합니다. 체크박스 선택만으로 얼마를 절약할 수 있는지 바로 확인합니다.</div>
+      <span class="feat-tag">실시간 합산 계산</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🗺️</div>
+      <div class="feat-title">정비소 길안내 연동</div>
+      <div class="feat-desc">AI 진단 후 바가지방지카드 하단에서 카카오맵·네이버지도로 가까운 정비소를 바로 찾을 수 있습니다.</div>
+      <span class="feat-tag">카카오맵 / 네이버지도 딥링크</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🚨</div>
+      <div class="feat-title">불법 렉카 신고</div>
+      <div class="feat-desc">원터치 신고서 자동 생성, 영상·음성 녹화(MediaRecorder API), 내 권리 카드, 신고 기관 안내(112, 1372, 1588-2001)까지 한 번에.</div>
+      <span class="feat-tag">MediaRecorder API 실제 연동</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 부품 테이블 ── -->
+<section id="parts" style="min-height:auto;padding:80px 24px;">
+  <div class="sec-label">Parts Management</div>
+  <h2 class="sec-title" style="font-size:clamp(24px,4vw,40px);">사람들이 가장 미루는 핵심 부품</h2>
+  <p class="sec-sub">엔진오일·타이어 말고, 진짜 돈 나가는 부품들</p>
+  <table class="parts-table">
+    <thead>
+      <tr>
+        <th>부품</th>
+        <th>교체 주기</th>
+        <th>방치 시 위험</th>
+        <th>상태</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>⚡ 점화플러그</td>
+        <td class="km">40,000km</td>
+        <td class="risk-warning">연비 저하, 시동 불량</td>
+        <td><div class="gauge-mini"><div class="gauge-mini-fill" style="width:60%;background:#FF8C00;"></div></div></td>
+      </tr>
+      <tr>
+        <td>🔄 휠 얼라이먼트 <span style="font-size:11px;color:#A0B0C8;">(토우/캠버만 조정 가능)</span></td>
+        <td class="km">20,000km</td>
+        <td class="risk-danger">타이어 편마모 → 사고, 20~30만원 추가</td>
+        <td><div class="gauge-mini"><div class="gauge-mini-fill" style="width:85%;background:#E53935;"></div></div></td>
+      </tr>
+      <tr>
+        <td>💧 냉각수</td>
+        <td class="km">40,000km</td>
+        <td class="risk-warning">엔진 과열 → 엔진 손상</td>
+        <td><div class="gauge-mini"><div class="gauge-mini-fill" style="width:50%;background:#FF8C00;"></div></div></td>
+      </tr>
+      <tr>
+        <td>🛑 브레이크 디스크</td>
+        <td class="km">70,000km</td>
+        <td class="risk-danger">제동 불량 → 사고</td>
+        <td><div class="gauge-mini"><div class="gauge-mini-fill" style="width:75%;background:#E53935;"></div></div></td>
+      </tr>
+      <tr>
+        <td>⚙️ 구동벨트</td>
+        <td class="km">80,000km</td>
+        <td class="risk-warning">시동 불가</td>
+        <td><div class="gauge-mini"><div class="gauge-mini-fill" style="width:40%;background:#43A047;"></div></div></td>
+      </tr>
+      <tr>
+        <td>🔧 타이밍벨트</td>
+        <td class="km">100,000km</td>
+        <td class="risk-danger">끊기면 엔진 전손 위험</td>
+        <td><div class="gauge-mini"><div class="gauge-mini-fill" style="width:95%;background:#E53935;"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:12px;color:#A0B0C8;margin-top:16px;text-align:center;">※ 위 게이지는 제네시스 G80 / 120,000km 기준 데모 데이터입니다</p>
+</section>
+
+<!-- ── AI 음성 UX ── -->
+<section id="voice">
+  <div class="voice-bg"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:8px;">
+    <div style="background:rgba(79,195,247,.15);border:1.5px solid var(--ai);color:var(--ai);padding:8px 24px;border-radius:99px;font-size:13px;font-weight:700;letter-spacing:.05em;">🔮 NEXT VERSION — 개발 예정</div>
+    <div style="background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.2);color:#ffcdd2;padding:6px 18px;border-radius:99px;font-size:12px;">현재 버전에는 포함되지 않은 기능입니다</div>
+  </div>
+  <div class="sec-label" style="position:relative;z-index:1;">Next Version — AI Voice UX</div>
+  <h2 class="sec-title" style="position:relative;z-index:1;">"하이 카닥터, 실행해 줘"</h2>
+  <p class="sec-sub" style="position:relative;z-index:1;">Android Auto / Apple CarPlay 연동<br/>운전석에서 말 한마디로 진단부터 정비소 매칭까지</p>
+
+  <div class="voice-flow" style="position:relative;z-index:1;">
+    <div class="voice-step">
+      <div class="voice-line">
+        <div class="voice-dot" style="background:rgba(255,140,0,.2);border:2px solid var(--point);color:var(--point);">🎙</div>
+        <div class="voice-connector"></div>
+      </div>
+      <div class="voice-bubble">
+        <div class="voice-who" style="color:var(--point);">DRIVER</div>
+        <div class="voice-text">"어? 이상한 소리가 나네? <strong>하이 카닥터, AI 카닥터 실행해 줘.</strong>"</div>
+      </div>
+    </div>
+    <div class="voice-step">
+      <div class="voice-line">
+        <div class="voice-dot" style="background:rgba(79,195,247,.2);border:2px solid var(--ai);color:var(--ai);">🤖</div>
+        <div class="voice-connector"></div>
+      </div>
+      <div class="voice-bubble">
+        <div class="voice-who" style="color:var(--ai);">AI 카닥터</div>
+        <div class="voice-text">"네, 오너님. 현재 차량 하부에서 불규칙한 마찰음이 감지되었습니다. 최근 브레이크 패드 교체 주기가 지난 상태인데, <strong>브레이크 패드 마모가 의심됩니다.</strong>"</div>
+        <div class="voice-action">⚡ 차량 내장 마이크 → 실시간 소음 주파수 분석 → 차량 정비 이력 교차 분석</div>
+      </div>
+    </div>
+    <div class="voice-step">
+      <div class="voice-line">
+        <div class="voice-dot" style="background:rgba(79,195,247,.2);border:2px solid var(--ai);color:var(--ai);">🤖</div>
+        <div class="voice-connector"></div>
+      </div>
+      <div class="voice-bubble">
+        <div class="voice-who" style="color:var(--ai);">AI 카닥터</div>
+        <div class="voice-text">"오너님의 안전한 주행을 위해, 현재 주행 경로에서 <strong>가장 가까운 브레이크 전문 정비소 사장님들과 바로 상담을 연결해 드릴까요?</strong>"</div>
+      </div>
+    </div>
+    <div class="voice-step">
+      <div class="voice-line">
+        <div class="voice-dot" style="background:rgba(255,140,0,.2);border:2px solid var(--point);color:var(--point);">🎙</div>
+        <div class="voice-connector"></div>
+      </div>
+      <div class="voice-bubble">
+        <div class="voice-who" style="color:var(--point);">DRIVER</div>
+        <div class="voice-text">"<strong>어, 연결해 줘.</strong>"</div>
+      </div>
+    </div>
+    <div class="voice-step">
+      <div class="voice-line">
+        <div class="voice-dot" style="background:rgba(67,160,71,.2);border:2px solid var(--safe);color:var(--safe);">✅</div>
+      </div>
+      <div class="voice-bubble">
+        <div class="voice-who" style="color:var(--safe);">ACTION</div>
+        <div class="voice-action">하이패스 방식으로 AI 진단 리포트(소음 데이터 + 의심 증상)가 인근 정비소 POS로 즉시 전송<br/>→ 차량 스피커폰으로 사장님과 실시간 전화/채팅 상담 연결</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 비즈니스 모델 ── -->
+<section id="biz">
+  <div class="sec-label">Business Model</div>
+  <h2 class="sec-title">Win-Win 비즈니스 생태계</h2>
+  <p class="sec-sub">단순 광고가 아닌 AI 1차 진단 완료된 실수요 고객을 정비소에 직접 연결</p>
+  <div class="biz-grid">
+    <div class="biz-card">
+      <div class="biz-icon">👤</div>
+      <div class="biz-title">운전자</div>
+      <div class="biz-desc">바가지 없이 정확한 진단, 합리적인 가격으로 정비 가능</div>
+    </div>
+    <div class="biz-arrow">→</div>
+    <div class="biz-card">
+      <div class="biz-icon">🩺</div>
+      <div class="biz-title">카닥터 플랫폼</div>
+      <div class="biz-desc">AI 1차 진단 완료된 실수요 고객 매칭<br/><strong style="color:var(--point);">수수료 기반 수익</strong></div>
+    </div>
+    <div class="biz-arrow">→</div>
+    <div class="biz-card">
+      <div class="biz-icon">🔧</div>
+      <div class="biz-title">정비소 사장님</div>
+      <div class="biz-desc">찌라시 광고 아닌 진짜 고객 유입, 예약 매출 증가</div>
+    </div>
+  </div>
+  <div style="margin-top:32px;background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.2);border-radius:16px;padding:24px 32px;max-width:700px;text-align:center;">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">4세대 IVI 시스템 비전</div>
+    <div style="font-size:15px;line-height:1.8;">길찾기·음악·영상을 넘어<br/><strong style="color:var(--point);">차량 하드웨어 ↔ 오프라인 인프라</strong>를 연결하는 차세대 모빌리티 UX</div>
+  </div>
+</section>
+
+<!-- ── 로드맵 ── -->
+<section id="roadmap">
+  <div class="sec-label">Roadmap</div>
+  <h2 class="sec-title">개발 로드맵</h2>
+  <div class="roadmap">
+    <div class="roadmap-step">
+      <div class="roadmap-left">
+        <div class="roadmap-circle" style="background:rgba(255,140,0,.15);border-color:var(--point);color:var(--point);">1</div>
+        <div class="roadmap-line" style="background:linear-gradient(to bottom,rgba(255,140,0,.3),rgba(79,195,247,.2));"></div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-phase" style="color:var(--point);">PHASE 1 — 현재</div>
+        <div class="roadmap-title">포폴버전 (프론트엔드)</div>
+        <div style="font-size:13px;color:var(--text2);">React 기반 프론트엔드 완성, 키워드 매핑 AI 진단, localStorage 데이터 관리</div>
+        <div class="roadmap-items">
+          <span class="roadmap-tag" style="color:var(--point);">✅ AI 진단</span>
+          <span class="roadmap-tag" style="color:var(--point);">✅ 바가지방지카드</span>
+          <span class="roadmap-tag" style="color:var(--point);">✅ 대시보드</span>
+          <span class="roadmap-tag" style="color:var(--point);">✅ 렉카신고</span>
+          <span class="roadmap-tag" style="color:var(--point);">✅ 수리비계산기</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-step">
+      <div class="roadmap-left">
+        <div class="roadmap-circle" style="background:rgba(79,195,247,.15);border-color:var(--ai);color:var(--ai);">2</div>
+        <div class="roadmap-line" style="background:linear-gradient(to bottom,rgba(79,195,247,.2),rgba(67,160,71,.2));"></div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-phase" style="color:var(--ai);">PHASE 2 — 수도권 테스트</div>
+        <div class="roadmap-title">실서비스 런칭</div>
+        <div style="font-size:13px;color:var(--text2);">AI API 연동, 정비소 DB 구축, 실제 매칭 수수료 수익 모델 검증</div>
+        <div class="roadmap-items">
+          <span class="roadmap-tag">AI API 연동</span>
+          <span class="roadmap-tag">정비소 DB</span>
+          <span class="roadmap-tag">카카오맵 API</span>
+          <span class="roadmap-tag">수수료 모델</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-step">
+      <div class="roadmap-left">
+        <div class="roadmap-circle" style="background:rgba(67,160,71,.15);border-color:var(--safe);color:var(--safe);">3</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-phase" style="color:var(--safe);">PHASE 3 — 스케일업</div>
+        <div class="roadmap-title">AI 음성 & CarPlay 연동</div>
+        <div style="font-size:13px;color:var(--text2);">Android Auto / Apple CarPlay 탑재, 실시간 사운드 분석, 정비소 POS 직연동</div>
+        <div class="roadmap-items">
+          <span class="roadmap-tag">Android Auto</span>
+          <span class="roadmap-tag">Apple CarPlay</span>
+          <span class="roadmap-tag">사운드 분석</span>
+          <span class="roadmap-tag">POS 연동</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 기술 스택 ── -->
+<section id="tech">
+  <div class="sec-label">Tech Stack</div>
+  <h2 class="sec-title" style="font-size:clamp(24px,4vw,40px);">기술 스택</h2>
+  <div class="tech-grid">
+    <div class="tech-chip">⚛️ React 18</div>
+    <div class="tech-chip">🎨 CSS Variables</div>
+    <div class="tech-chip">💾 localStorage</div>
+    <div class="tech-chip">🎙 MediaRecorder API</div>
+    <div class="tech-chip">🗺️ 카카오맵 딥링크</div>
+    <div class="tech-chip">🗺️ 네이버지도 딥링크</div>
+    <div class="tech-chip">🔤 Noto Sans KR</div>
+    <div class="tech-chip">🔢 Roboto Mono</div>
+    <div class="tech-chip">📱 모바일 최적화</div>
+  </div>
+</section>
+
+<!-- ── 마무리 ── -->
+<section id="outro">
+  <div class="outro-bg"></div>
+  <div class="outro-content">
+    <h2 class="outro-title">차량 케어의<br/><span>새로운 기준</span>을 만들다</h2>
+    <p class="outro-sub">자동차과 출신 + 세차장 현장 경험 + 3개월 개발 공부<br/>현장을 아는 개발자가 만든 진짜 솔루션</p>
+    <div class="dev-info">
+      <div class="dev-name">조진훈</div>
+      <div class="dev-desc">Frontend Developer · 카닥터 기획 · 개발</div>
+      <div style="margin-top:16px;padding:12px 24px;background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.2);border-radius:12px;font-size:13px;color:var(--text2);">
+        Portfolio v1.0 · React · 2025
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// 스크롤 진행바
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  const pct=(d.scrollTop/(d.scrollHeight-d.clientHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+
+// 섹션 페이드인
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.feat-card,.problem-card,.biz-card,.roadmap-content,.voice-bubble,.tech-chip').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(20px)';
+  el.style.transition='opacity .5s ease, transform .5s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
