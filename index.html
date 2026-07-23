@@ -243,9 +243,9 @@ section{min-height:100vh;display:flex;flex-direction:column;align-items:center;j
     </div>
     <div class="feat-card">
       <div class="feat-icon">🗺️</div>
-      <div class="feat-title">정비소 길안내 연동</div>
-      <div class="feat-desc">AI 진단 후 바가지방지카드 하단에서 카카오맵·네이버지도로 가까운 정비소를 바로 찾을 수 있습니다.</div>
-      <span class="feat-tag">카카오맵 / 네이버지도 딥링크</span>
+      <div class="feat-title">내주변 정비소 연결</div>
+      <div class="feat-desc">위치 기반 내주변 정비소를 활성화하여 앱 내에 정비소 목록을 나열해주고, 정비소 견적 버튼을 눌러 즉시 연락할 수 있습니다.</div>
+      <span class="feat-tag">위치 기반 / 견적 문의</span>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🚨</div>
@@ -471,6 +471,143 @@ section{min-height:100vh;display:flex;flex-direction:column;align-items:center;j
   </div>
 </section>
 
+<!-- ── UX/UI 개선 기획 ── -->
+<section id="uxui-prd" style="background:var(--bg2);">
+  <div class="sec-label">UX/UI Improvement PRD</div>
+  <h2 class="sec-title" style="font-size:clamp(24px,4vw,40px);">정비소 탐색 및 견적 요청 UX/UI 개선</h2>
+  
+  <div style="max-width:800px; width:100%; margin-top:40px; display:flex; flex-direction:column; gap:24px;">
+    
+    <!-- 1. 개요 및 배경 -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--point);">1. 개요 및 배경</h3>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>서비스:</strong> 카닥터 (자동차 정비 및 관리 플랫폼)</li>
+        <li><strong>기획 목적:</strong> 불명확한 버튼 명칭과 분산된 탐색 동선을 직관적인 <strong>위치 기반(GPS) 탐색 및 견적 연결 구조</strong>로 재설계하여 유저 이탈률을 낮추고 견적 전환율(CR)을 극대화함.</li>
+      </ul>
+    </div>
+
+    <!-- 2. 현상 및 문제점 -->
+    <div style="background:var(--card); border:1px solid rgba(229,57,53,0.3); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--danger);">2. 현상 및 문제점 분석 (As-Is)</h3>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>타사 브랜드 명칭 노출로 인한 혼란:</strong> 메인 UI 상에 `카카오정비소`, `네이버정비소` 등 타사 명칭이 무분별하게 혼용되어 유저에게 서비스 정체성에 대한 혼란 야기</li>
+        <li><strong>복잡한 정비소 탐색 동선:</strong> 직관적인 "내 주변" 중심의 탐색 체계가 부족하여 정비소를 한눈에 비교하고 선택하기 어려움</li>
+        <li><strong>전환(Conversion) 버튼의 가시성 부족:</strong> 정비소 탐색 후 실제 견적 문의나 연락으로 이어지는 핵심 CTA 동선이 매끄럽지 못함</li>
+      </ul>
+    </div>
+
+    <!-- 3. 개선 방향 -->
+    <div style="background:var(--card); border:1px solid rgba(67,160,71,0.3); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--safe);">3. 개선 방향 및 UX 동선 설계 (To-Be)</h3>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>명칭 및 탭 직관화:</strong> 불필요한 타사 브랜드 버튼을 폐지하고 <strong>`내 주변 정비소`</strong> 단일 명칭으로 일원화</li>
+        <li><strong>위치 기반 자동 리스트업:</strong> 유저 GPS 좌표를 기반으로 근거리 정비소를 우선 노출</li>
+        <li><strong>원클릭 견적 요청:</strong> 정비소 카드 및 상세 페이지 내 `견적 요청 / 전화 연결` 버튼을 고정(Sticky)배치</li>
+      </ul>
+      <div style="margin-top:16px; background:rgba(255,255,255,0.05); padding:16px; border-radius:12px; text-align:center; font-size:14px; font-weight:700; color:var(--text1);">
+        [ 1. 내 주변 정비소 탐색 ] ➔ [ 2. 정비소 상세 정보 확인 ] ➔ [ 3. 견적 요청 및 전화 연결 ]
+      </div>
+    </div>
+
+    <!-- 4. 세부 화면 구성 (PRD) -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; overflow-x:auto;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:16px; color:var(--ai);">4. 세부 화면 구성 및 기능 요구사항 (PRD)</h3>
+      <table class="parts-table" style="margin-top:0;">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>주요 변경 사항</th>
+            <th>기능 사양 및 UX 상세</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>메인 UI</strong></td>
+            <td>버튼 명칭 변경</td>
+            <td>`카카오정비소` / `네이버정비소` ➔ <strong>`내 주변 정비소`</strong> 통합</td>
+          </tr>
+          <tr>
+            <td><strong>정비소 리스트</strong></td>
+            <td>GPS 기반 나열</td>
+            <td>- 현 위치 기준 거리(km) 표시<br>- 영업 여부, 평점, 작업 후기 수 한눈에 제공</td>
+          </tr>
+          <tr>
+            <td><strong>상세/견적 UI</strong></td>
+            <td>CTA 버튼 강화</td>
+            <td>- 하단 Sticky 바 형태로 <strong>`[견적 요청]` / `[전화 연결]`</strong> 상시 노출<br>- 탭 한 번으로 이미지 첨부 및 견적 문의 양식 진입</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. 기대 효과 -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--point);">5. 기대 효과</h3>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>유저 신뢰도 제고:</strong> 카닥터 자체 브랜딩 강화 및 불필요한 타사 이동 감쇄</li>
+        <li><strong>사용성(Usability) 향상:</strong> 위치 기반 3단계 즉시 탐색으로 유저 탐색 피로도 최소화</li>
+        <li><strong>비즈니스 매출 증대:</strong> 견적 및 전화 연결 접근성을 높여 제휴 정비소 매칭 건수 폭발적 증가</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── 신규 기획서: 외제차 정밀 견적 ── -->
+<section id="import-car-prd" style="background:var(--bg);">
+  <div class="sec-label">Ranking & Import Car PRD</div>
+  <h2 class="sec-title" style="font-size:clamp(24px,4vw,40px);">외제차 정밀 견적 및 상위 랭킹 시스템</h2>
+  
+  <div style="max-width:800px; width:100%; margin-top:40px; display:flex; flex-direction:column; gap:24px;">
+    
+    <!-- 1. 개요 -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--point);">1. 업데이트 개요</h3>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>기획 배경:</strong> 수입차 정비 시장의 정보 불균형(바가지 요금, 기술력 미검증)을 해소하고, 실력 있는 정비소의 매출을 극대화하는 선순환 구조 구축.</li>
+        <li><strong>핵심 목표:</strong><br/>
+          1) 외제차 전문 정비소 연계 정밀 견적 프로세스 도입<br/>
+          2) 관리자 페이지 기반의 리뷰/별점 알고리즘 구축을 통한 양심·실력 업체 상위 랭킹화
+        </li>
+      </ul>
+    </div>
+
+    <!-- 2. 신규 기능 -->
+    <div style="background:var(--card); border:1px solid rgba(79,195,247,0.3); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--ai);">2. 신규 기능 및 시스템 구조 (To-Be)</h3>
+      
+      <h4 style="font-size:15px; color:var(--text1); margin-top:16px; margin-bottom:8px;">🚗 [사용자 단] 외제차 정밀 견적 기능</h4>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>외제차 전담 카센타 카테고리 신설:</strong> 브랜드별/차종별 전문 정비소 필터링 제공.</li>
+        <li><strong>정밀 견적 요청 CTA:</strong> 차량 증상 및 파 파손 부위 사진 첨부 ➔ 수입차 전문 카센타 다이렉트 매칭.</li>
+      </ul>
+
+      <h4 style="font-size:15px; color:var(--text1); margin-top:24px; margin-bottom:8px;">⚙️ [관리자 단] Admin 페이지 & 랭킹 알고리즘</h4>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>어드민 관리자 페이지 구축:</strong><br/>
+          - 업체별 실시간 리뷰, 별점, 견적 응답률 데이터 모니터링.<br/>
+          - 어뷰징(거짓 리뷰, 별점 테러) 검증 및 정비소 상태 관리.
+        </li>
+        <li><strong>실력/가성비 기반 상위 랭크 시스템:</strong><br/>
+          - 단순히 광고비를 많이 낸 업체가 아닌, <strong>`실제 이용자 평점 + 정밀 견적 만족도 + 가격 합리성`</strong> 종합 점수가 높은 정비를 리스트 최상단에 자동 배치.
+        </li>
+      </ul>
+    </div>
+
+    <!-- 4. 기대 효과 -->
+    <div style="background:var(--card); border:1px solid rgba(67,160,71,0.3); border-radius:16px; padding:24px;">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:12px; color:var(--safe);">4. 기대 효과 (Business Impact)</h3>
+      <ul style="font-size:14px; color:var(--text2); line-height:1.7; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+        <li><strong>정비소 측면 (B2B):</strong> 마케팅 능력이 부족해도 실력과 양심만 있다면 플랫폼 상위 노출을 통해 <strong>신규 고객 확보 및 매출 폭발적 극대화</strong>.</li>
+        <li><strong>사용자 측면 (B2C):</strong> 외제차 수리비 덤탱이 공포 해소 및 검증된 전문 업체 매칭으로 <strong>서비스 신뢰도 상승</strong>.</li>
+        <li><strong>플랫폼 측면 (Platform):</strong> 고관여 수입차 유저 락인(Lock-in) 및 우수 제휴 정비소 네트워크 독점 확보.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
 <!-- ── 기술 스택 ── -->
 <section id="tech">
   <div class="sec-label">Tech Stack</div>
@@ -480,8 +617,8 @@ section{min-height:100vh;display:flex;flex-direction:column;align-items:center;j
     <div class="tech-chip">🎨 CSS Variables</div>
     <div class="tech-chip">💾 localStorage</div>
     <div class="tech-chip">🎙 MediaRecorder API</div>
-    <div class="tech-chip">🗺️ 카카오맵 딥링크</div>
-    <div class="tech-chip">🗺️ 네이버지도 딥링크</div>
+    <div class="tech-chip">🗺️ 위치 기반 API</div>
+    <div class="tech-chip">📞 실시간 견적 문의</div>
     <div class="tech-chip">🔤 Noto Sans KR</div>
     <div class="tech-chip">🔢 Roboto Mono</div>
     <div class="tech-chip">📱 모바일 최적화</div>
